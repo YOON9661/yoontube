@@ -9,9 +9,12 @@ import Template from "../template";
 import useInput from "../../hook/useInput";
 import {
     videoUploadReqeustAction,
+    videoUploadInitializeAction,
     videoPreviewRequestAction,
+    videoPreviewInitializeAction,
     thumbnailPreviewRequestAction,
-    videoUploadInitializeAction
+    thumbnailPreviewInitializeAction
+
 } from "../../redux/video/video";
 
 // thumbnail == 썸네일 
@@ -19,6 +22,8 @@ import {
 const UploadForm = ({ history }) => {
     const dispatch = useDispatch();
     const { previewVideoData, previewThumbnailData } = useSelector(state => state.video);
+    const { isLoggedIn } = useSelector(state => state.login);
+
     const thumbnailurl = `http://localhost:3001${previewThumbnailData?.thumbnailurl}`;
     const videourl = `http://localhost:3001${previewVideoData?.videourl}`;
 
@@ -53,6 +58,17 @@ const UploadForm = ({ history }) => {
 
     const { videoData } = useSelector(state => state.video);
 
+    // preview delete
+    const onDeletePreviewVideo = useCallback(() => {
+        dispatch(videoPreviewInitializeAction());
+        setTimeout(history.push("/upload"), 2);
+    }, [dispatch, history]);
+
+    const onDeletePreviewImage = useCallback(() => {
+        dispatch(thumbnailPreviewInitializeAction());
+        setTimeout(history.push("/upload"), 2);
+    }, [dispatch, history]);
+
     // useEffect
     useEffect(() => {
         if (videoData) {
@@ -63,7 +79,7 @@ const UploadForm = ({ history }) => {
                 dispatch(videoUploadInitializeAction());
             }
         }
-    }, [videoData]);
+    }, [dispatch, videoData, history]);
 
     return (
         <>
@@ -78,72 +94,92 @@ const UploadForm = ({ history }) => {
                 >
                     동영상 업로드 <DiffOutlined />
                 </h3>
-                <FormWrapper>
-                    <Form encType="multipart/form-data" onFinish={onSubmit}>
-                        <Form.Item>
-                            <VideoUpload>
-                                <input type="file" name="video" onChange={onChangeVideo} multiple hidden ref={videoInput} />
-                                <FileUploadForm>
-                                    {previewVideoData === null ?
-                                        (
-                                            <ImageButton onClick={onClickVideoUpload}>
-                                                <PlusOutlined />
-                                                <br />
-                                                비디오 업로드
-                                            </ImageButton>
-                                        ) : (
-                                            <video style={{ width: "300px" }} controls>
-                                                <source src={videourl} type="video/mp4" />
-                                            </video>
-                                        )
-                                    }
-                                </FileUploadForm>
-                            </VideoUpload>
-                        </Form.Item>
-                        <Form.Item>
-                            <ImageUpload>
-                                <input type="file" name="thumbnail" onChange={onChangeThumbnail} multiple hidden ref={imageInput} />
-                                <FileUploadForm>
-                                    {previewThumbnailData === null ?
-                                        (
-                                            <ImageButton onClick={onClickImageInput}>
-                                                <PlusOutlined />
-                                                <br />
-                                                썸네일 업로드
-                                            </ImageButton>
-                                        ) : (
-                                            <img style={{ width: "50%" }} src={thumbnailurl} alt={thumbnailurl} />
-                                        )}
-                                </FileUploadForm>
-                            </ImageUpload>
-                        </Form.Item>
-                        <Form.Item>
-                            <Radio.Group>
-                                <Radio.Button value="private">Private</Radio.Button>
-                                <Radio.Button value="public">Public</Radio.Button>
-                            </Radio.Group>
-                        </Form.Item>
-                        <Form.Item>
-                            <Form.Item label="title" required tooltip="This is a required field">
-                                <Input
-                                    placeholder="input your title"
-                                    onChange={onChangeTitle}
-                                />
+                {isLoggedIn === false ? (
+                    <div style={{ margin: '30px' }}>로그인이 필요합니다...</div>
+                ) : (
+                    <FormWrapper>
+                        <Form encType="multipart/form-data" onFinish={onSubmit}>
+                            <Form.Item>
+                                <VideoUpload>
+                                    <input type="file" name="video" onChange={onChangeVideo} multiple hidden ref={videoInput} />
+                                    <FileUploadForm>
+                                        {previewVideoData === null ?
+                                            (
+                                                <ImageButton onClick={onClickVideoUpload}>
+                                                    <PlusOutlined />
+                                                    <br />
+                                            비디오 업로드
+                                                </ImageButton>
+                                            ) : (
+                                                <>
+                                                    <video style={{ width: "300px" }} controls>
+                                                        <source src={videourl} type="video/mp4" />
+                                                    </video>
+                                                    <div style={{ marginTop: '20px' }}>
+                                                        <Button type="primary" onClick={onDeletePreviewVideo}>비디오 초기화</Button>
+                                                    </div>
+                                                    <h6 style={{ color: 'red', margin: '5px' }}>초기화 할 시엔 다른 파일을 넣으세요!</h6>
+                                                </>
+                                            )
+                                        }
+                                    </FileUploadForm>
+                                </VideoUpload>
                             </Form.Item>
-                        </Form.Item>
-                        <Form.Item>
-                            <Form.Item label="description" required tooltip="This is a required field">
-                                <Input
-                                    placeholder="input your description"
-                                    onChange={onChangeDescription}
-                                />
+                            <Form.Item>
+                                <ImageUpload>
+                                    <input type="file" name="thumbnail" onChange={onChangeThumbnail} multiple hidden ref={imageInput} />
+                                    <FileUploadForm>
+                                        {previewThumbnailData === null ?
+                                            (
+                                                <ImageButton onClick={onClickImageInput}>
+                                                    <PlusOutlined />
+                                                    <br />
+                                            썸네일 업로드
+                                                </ImageButton>
+                                            ) : (
+                                                <>
+                                                    <img
+                                                        style={{ width: "50%" }}
+                                                        src={thumbnailurl}
+                                                        alt={thumbnailurl}
+                                                    />
+                                                    <div style={{ marginTop: '20px' }}>
+                                                        <Button type="primary" onClick={onDeletePreviewImage}>초기화</Button>
+                                                    </div>
+                                                    <h6 style={{ color: 'red', margin: '5px' }}>초기화 후엔 반드시 다른 파일을 넣으세요!</h6>
+                                                </>
+                                            )}
+                                    </FileUploadForm>
+                                </ImageUpload>
                             </Form.Item>
-                        </Form.Item>
-                        <Form.Item>
-                            <Button type="primary" htmlType="submit">Submit</Button>
-                        </Form.Item>
-                    </Form>
-                </FormWrapper>
+                            <Form.Item>
+                                <Radio.Group>
+                                    <Radio.Button value="private">Private</Radio.Button>
+                                    <Radio.Button value="public">Public</Radio.Button>
+                                </Radio.Group>
+                            </Form.Item>
+                            <Form.Item>
+                                <Form.Item label="title" required tooltip="This is a required field">
+                                    <Input
+                                        placeholder="input your title"
+                                        onChange={onChangeTitle}
+                                    />
+                                </Form.Item>
+                            </Form.Item>
+                            <Form.Item>
+                                <Form.Item label="description" required tooltip="This is a required field">
+                                    <Input
+                                        placeholder="input your description"
+                                        onChange={onChangeDescription}
+                                    />
+                                </Form.Item>
+                            </Form.Item>
+                            <Form.Item>
+                                <Button type="primary" htmlType="submit">Submit</Button>
+                            </Form.Item>
+                        </Form>
+                    </FormWrapper>
+                )}
             </Template>
         </>
     );

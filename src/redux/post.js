@@ -147,7 +147,7 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 isPostUploaded: false,
                 postedData: null,
-                previewError: null,
+                postUploadError: null,
 
                 isPreviewed: false,
                 previewImageData: null,

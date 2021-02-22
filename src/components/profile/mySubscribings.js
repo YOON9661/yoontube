@@ -1,19 +1,53 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Avatar, Button } from 'antd';
 import styled from "styled-components"
 
-const MySubscribingsBlock = ({ nick }) => {
+import {
+    unSubscribeRequestAction,
+    subscribeRequestAction
+} from "../../redux/subscribe"
+
+const MySubscribingsBlock = ({ nick, id }) => {
+    const dispatch = useDispatch();
+
+    const [subscribingOk, setSubscribingOk] = useState(true);
+
+    const onDeleteSubscribing = useCallback(() => {
+        dispatch(unSubscribeRequestAction(id));
+        setSubscribingOk(false);
+    }, [dispatch, id]);
+
+    const onCreateSubscribing = useCallback(() => {
+        dispatch(subscribeRequestAction(id));
+        setSubscribingOk(true);
+    }, [dispatch, id]);
+
     return (
         <SubscribersWrapper>
             <Avatar>{nick[0]}</Avatar>
             <Nick>{nick}</Nick>
-            <Button style={{
-                backgroundColor: 'red',
-                border: 'none',
-                color: "white",
-                width: '120px',
-                marginLeft: '140px'
-            }}>구독 취소하기</Button>
+            {subscribingOk === true ? (
+                <Button
+                    onClick={onDeleteSubscribing}
+                    style={{
+                        backgroundColor: 'red',
+                        border: 'none',
+                        color: "white",
+                        width: '120px',
+                        marginLeft: '140px'
+                    }}>구독 취소하기</Button>
+            ) : (
+                <Button
+                    onClick={onCreateSubscribing}
+                    style={{
+                        backgroundColor: 'red',
+                        border: 'none',
+                        color: "white",
+                        width: '120px',
+                        marginLeft: '140px'
+                    }}>구독하기</Button>
+            )}
         </SubscribersWrapper>
     );
 }

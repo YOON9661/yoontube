@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Spin, Tabs } from "antd";
 import { withRouter } from "react-router-dom"
@@ -7,6 +7,7 @@ import styled from "styled-components";
 
 import Template from "./template";
 import MyVideo from "./profile/myVideo";
+import MyPosts from "./profile/myPosts";
 import OtherSubscribe from "./profile/otherSubscribe";
 import { watchProfileRequestAction, profileInitializeAction } from "../redux/profile";
 
@@ -30,7 +31,7 @@ const OtherProfile = ({ match, history }) => {
 
     useEffect(() => {
         if (userId) {
-            if (userId === myId) {
+            if (parseInt(userId) === myId) {
                 history.push("/profile");
             }
             dispatch(watchProfileRequestAction(userId));
@@ -69,10 +70,17 @@ const OtherProfile = ({ match, history }) => {
                                     ))}
                                 </VideoWrapper>
                             </Tabs.TabPane>
-                            <Tabs.TabPane tab="포스트" key="2">
+                            <Tabs.TabPane tab="커뮤니티" key="2">
                                 <PostWrapper>
                                     {otherPosts.map(post => (
-                                        <div key={post.id}>안녕</div>
+                                        <MyPosts
+                                            key={post.id}
+                                            id={post.id}
+                                            image={post.image}
+                                            content={post.content}
+                                            userNick={otherNickname}
+                                            createdAt={post.createdAt}
+                                        />
                                     ))}
                                 </PostWrapper>
                             </Tabs.TabPane>
@@ -101,7 +109,8 @@ const VideoWrapper = styled.div`
 `;
 
 const PostWrapper = styled.div`
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    margin: 15px;
+    margin-left: 10px;
+    margin-right: auto;
+    margin-top: 30px;
 `;
+

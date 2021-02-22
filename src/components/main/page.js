@@ -90,6 +90,7 @@ const AvatarWrapper = styled(Avatar)`
 
 const Fuck = styled.div`
     margin: 0;
+    margin-right: 100px;
     padding: 0;
     display: grid;
     grid-template-columns: 200px 1fr;

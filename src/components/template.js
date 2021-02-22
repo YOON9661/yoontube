@@ -34,7 +34,7 @@ const Template = ({ children, history }) => {
                     <Link to="/register">register</Link>
                 </Menu.Item>
                 <Menu.Item>
-                    <Link to="/upload">upload</Link>
+                    <Link to="/upload">video upload</Link>
                 </Menu.Item>
                 <Menu.Item>
                     <Link to="/post">community upload</Link>

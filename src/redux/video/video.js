@@ -2,10 +2,12 @@
 export const VIDEO_PREVIEW_REQUEST_ACTION = "VIDEO_PREVIEW_REQUEST_ACTION";
 export const VIDEO_PREVIEW_SUCCESS_ACTION = "VIDEO_PREVIEW_SUCCESS_ACTION";
 export const VIDEO_PREVIEW_FAILURE_ACTION = "VIDEO_PREVIEW_FAILURE_ACTION";
+export const VIDEO_PREVIEW_INITIALIZE = "VIDEO_PREVIEW_INITIALIZE";
 
 export const THUMBNAIL_PREVIEW_REQUEST_ACTION = "THUMBNAIL_PREVIEW_REQUEST_ACTION";
 export const THUMBNAIL_PREVIEW_SUCCESS_ACTION = "THUMBNAIL_PREVIEW_SUCCESS_ACTION";
 export const THUMBNAIL_PREVIEW_FAILURE_ACTION = "THUMBNAIL_PREVIEW_FAILURE_ACTION";
+export const THUMBNIAL_PREVIEW_INITIALIZE = "THUMBNIAL_PREVIEW_INITIALIZE";
 
 export const VIDEO_UPLOAD_REQUEST_ACTION = "VIDEO_UPLOAD_REQUEST_ACTION";
 export const VIDEO_UPLOAD_SUCCESS_ACTION = "VIDEO_UPLOAD_SUCCESS_ACTION";
@@ -20,11 +22,21 @@ export const thumbnailPreviewRequestAction = (data) => {
         data
     }
 }
+export const thumbnailPreviewInitializeAction = () => {
+    return {
+        type: THUMBNIAL_PREVIEW_INITIALIZE
+    }
+}
 
 export const videoPreviewRequestAction = (data) => {
     return {
         type: VIDEO_PREVIEW_REQUEST_ACTION,
         data
+    }
+}
+export const videoPreviewInitializeAction = () => {
+    return {
+        type: VIDEO_PREVIEW_INITIALIZE
     }
 }
 
@@ -34,7 +46,6 @@ export const videoUploadReqeustAction = (data) => {
         data
     }
 }
-
 export const videoUploadInitializeAction = () => {
     return {
         type: VIDEO_UPLOAD_INITIALIZE
@@ -84,6 +95,13 @@ const reducer = (state = initialState, action) => {
                 isPreviewingVideo: false,
                 previewVideoError: action.data
             }
+        case VIDEO_PREVIEW_INITIALIZE:
+            return {
+                ...state,
+                isPreviewedVideo: false,
+                previewVideoData: null,
+                previewVideoError: null
+            }
 
         // thumbnail preview actoin
         case THUMBNAIL_PREVIEW_REQUEST_ACTION:
@@ -104,6 +122,13 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 isPreviewingThumbnail: false,
                 previewThumbnailError: action.data
+            }
+        case THUMBNIAL_PREVIEW_INITIALIZE:
+            return {
+                ...state,
+                isPreviewedThumbnail: false,
+                previewThumbnailData: null,
+                previewThumbnailError: null
             }
 
         // video upload

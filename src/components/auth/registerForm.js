@@ -12,6 +12,7 @@ import useInput from "../../hook/useInput";
 
 const RegisterForm = ({ history }) => {
     const { isRegistered } = useSelector(state => state.register);
+    const { isLoggedIn } = useSelector(state => state.login);
     useEffect(() => {
         if (isRegistered) {
             history.push("/login");
@@ -51,84 +52,88 @@ const RegisterForm = ({ history }) => {
     return (
         <>
             <Template>
-                <FormWraaper>
-                    <Form
-                        onFinish={onSubmit}
-                    >
-                        <Form.Item
-                            label="Email"
-                            name="email"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please input your Email',
-                                },
-                            ]}
+                {isLoggedIn === true ? (
+                    <div style={{ margin: '30px' }}>로그아웃 후 사용가능합니다...</div>
+                ) : (
+                    <FormWraaper>
+                        <Form
+                            onFinish={onSubmit}
                         >
-                            <Input
-                                type="email"
-                                onChange={onChangeEmail}
-                                required
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            label="Nickname"
-                            name="nickname"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please input your Nickname',
-                                },
-                            ]}
-                        >
-                            <Input
-                                type="text"
-                                onChange={onChangeNickname}
-                                required
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            label="password"
-                            name="password"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please input your Password',
-                                },
-                            ]}
-                        >
-                            <Input
-                                type="password"
-                                onChange={onChangePassword}
-                                required
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            label="Password Confirm"
-                            name="passwordConfirm"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please input your Password Confirm',
-                                },
-                            ]}
-                        >
-                            <Input
-                                type="password"
-                                onChange={onChangePasswordConfirm}
-                                required
-                            />
-                        </Form.Item>
-                        <Form.Item>
-                            <Checkbox onClick={onCheckContract}>해당 약관에 동의합니다.</Checkbox>
-                        </Form.Item>
-                        {passwordConfirmError && <Error>비밀번호가 일치하지 않습니다...</Error>}
-                        {checkError && <Error>약관에 동의하셔야합니다!</Error>}
-                        <ButtonWrapper>
-                            <SubmitButton type="primary" htmlType="submit">등록</SubmitButton>
-                        </ButtonWrapper>
-                    </Form>
-                </FormWraaper>
+                            <Form.Item
+                                label="Email"
+                                name="email"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please input your Email',
+                                    },
+                                ]}
+                            >
+                                <Input
+                                    type="email"
+                                    onChange={onChangeEmail}
+                                    required
+                                />
+                            </Form.Item>
+                            <Form.Item
+                                label="Nickname"
+                                name="nickname"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please input your Nickname',
+                                    },
+                                ]}
+                            >
+                                <Input
+                                    type="text"
+                                    onChange={onChangeNickname}
+                                    required
+                                />
+                            </Form.Item>
+                            <Form.Item
+                                label="password"
+                                name="password"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please input your Password',
+                                    },
+                                ]}
+                            >
+                                <Input
+                                    type="password"
+                                    onChange={onChangePassword}
+                                    required
+                                />
+                            </Form.Item>
+                            <Form.Item
+                                label="Password Confirm"
+                                name="passwordConfirm"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please input your Password Confirm',
+                                    },
+                                ]}
+                            >
+                                <Input
+                                    type="password"
+                                    onChange={onChangePasswordConfirm}
+                                    required
+                                />
+                            </Form.Item>
+                            <Form.Item>
+                                <Checkbox onClick={onCheckContract}>해당 약관에 동의합니다.</Checkbox>
+                            </Form.Item>
+                            {passwordConfirmError && <Error>비밀번호가 일치하지 않습니다...</Error>}
+                            {checkError && <Error>약관에 동의하셔야합니다!</Error>}
+                            <ButtonWrapper>
+                                <SubmitButton type="primary" htmlType="submit">등록</SubmitButton>
+                            </ButtonWrapper>
+                        </Form>
+                    </FormWraaper>
+                )}
             </Template>
         </>
     );

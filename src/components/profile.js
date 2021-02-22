@@ -151,7 +151,7 @@ const ProfileForm = () => {
                     </ProfileWrapper>
                 ) : (
                     <>
-                        <div>로그인이 필요합니다!</div>
+                        <div style={{ margin: '30px' }}>로그인이 필요합니다...</div>
                     </>
                 )}
             </Template>

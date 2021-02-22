@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { Button, Avatar } from "antd";
 import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import {
     subscribeRequestAction,

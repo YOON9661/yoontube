@@ -30,24 +30,23 @@ const PostForm = ({ history }) => {
     const onClickImageInput = useCallback(() => {
         imageInput.current.click();
     }, []);
-
     const imageInput = useRef();
     const onChangeImage = useCallback((e) => {
         const imagePreviewFormData = new FormData();
         imagePreviewFormData.append("img", e.target.files[0])
-        console.log(imagePreviewFormData);
         dispatch(postPreviewReqeustAction(imagePreviewFormData));
     }, [dispatch]);
 
+    // submit
     const onSubmit = useCallback(() => {
         dispatch(postUploadReqeustAction({ description, url }));
         history.push("/post");
     }, [description, url, history, dispatch]);
 
-    // preview delete 
-    const onClickPreviewInitialize = useCallback(() => {
-        dispatch(postPreviewInitializeAction())
-    }, [dispatch]);
+    const onDeletePreviewImage = useCallback(() => {
+        dispatch(postPreviewInitializeAction());
+        history.push("/post");
+    }, [dispatch, history]);
 
     // useEffect
     useEffect(() => {
@@ -73,9 +72,10 @@ const PostForm = ({ history }) => {
                 }}>
                     커뮤니티 업로드 <HighlightOutlined />
                 </h3>
-                {isLoggedIn === true &&
+                {isLoggedIn === false ? (
+                    <div style={{ margin: '30px' }}>로그인이 필요합니다...</div>
+                ) : (
                     <FormWrapper encType="multipart/form-data" onFinish={onSubmit}>
-
                         <Form.Item>
                             <ImageUpload>
                                 <input
@@ -86,6 +86,7 @@ const PostForm = ({ history }) => {
                                     hidden
                                     ref={imageInput}
                                 />
+
                                 {previewImageData === null ?
                                     (
                                         <div style={{ textAlign: 'center' }}>
@@ -107,7 +108,10 @@ const PostForm = ({ history }) => {
                                                     alt={url}
                                                 />
                                             </div>
-                                            <Button onClick={onClickPreviewInitialize} >삭제</Button>
+                                            <div style={{ marginTop: '30px', textAlign: 'center' }}>
+                                                <Button type='primary' onClick={onDeletePreviewImage}>초기화</Button>
+                                                <h6 style={{ color: 'red', margin: '5px' }}>초기화 할 시엔 다른 파일을 넣으세요!</h6>
+                                            </div>
                                         </>
                                     )}
 
@@ -124,21 +128,7 @@ const PostForm = ({ history }) => {
                             <Button type="primary" htmlType="submit">업로드</Button>
                         </Form.Item>
                     </FormWrapper>
-                }
-                {/* <div>
-                    {postsData.map(postData => (
-                        <PostsData
-                            key={postData?.id}
-                            id={postData?.id}
-                            userId={postData?.User.id}
-                            userNick={postData?.User.nickname}
-                            content={postData?.content}
-                            image={postData?.image}
-                            comments={postData?.Comments}
-                        />
-                    ))
-                    }
-                </div> */}
+                )}
             </Template>
         </>
     );
