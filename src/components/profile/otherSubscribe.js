@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { Button, Avatar } from "antd";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
     subscribeRequestAction,
@@ -10,6 +10,8 @@ import {
 
 const OtherSubscribe = ({ nick, idList, myId, otherId }) => {
     const dispatch = useDispatch();
+
+    const { isLoggedIn } = useSelector(state => state.login);
 
     const [isIdList, setIsIdList] = useState(idList);
 
@@ -32,22 +34,26 @@ const OtherSubscribe = ({ nick, idList, myId, otherId }) => {
                 <div style={{ marginLeft: '15px', marginTop: '10px' }}>구독자 {[...isIdList].length}명</div>
             </div>
             <div style={{ flex: '1', marginRight: '10px' }}>
-                {[...isIdList].includes(myId) ? (
-                    <Button
-                        type="primary"
-                        onClick={onClickUnSubscribing}
-                        style={{ marginTop: '30px' }}
-                    >
-                        구독 취소하기
-                    </Button>
-                ) : (
-                    <Button
-                        type="primary"
-                        onClick={onClickSubscribing}
-                        style={{ marginTop: '30px' }}
-                    >
-                        구독하기
-                    </Button>
+                {isLoggedIn && (
+                    <div>
+                        {[...isIdList].includes(myId) ? (
+                            <Button
+                                type="primary"
+                                onClick={onClickUnSubscribing}
+                                style={{ marginTop: '30px' }}
+                            >
+                                구독 취소하기
+                            </Button>
+                        ) : (
+                            <Button
+                                type="primary"
+                                onClick={onClickSubscribing}
+                                style={{ marginTop: '30px' }}
+                            >
+                                구독하기
+                            </Button>
+                        )}
+                    </div>
                 )}
             </div>
         </ProfileWrapper>
